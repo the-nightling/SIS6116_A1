@@ -14,6 +14,7 @@ def main():
     print(tsp.type.name)
     print(tsp.dimension)
     print(tsp.edgeWeightType.name)
+    print(tsp.nodeCoords)
 
 
 class TSP_TYPE(Enum):
@@ -82,6 +83,7 @@ class TSP:
     edgeDataFormat: EDGE_DATA_FORMAT
     nodeCoordType: NODE_COORD_TYPE
     displayDataType: DISPLAY_DATA_TYPE
+    nodeCoords: list[tuple[float, float]]
     _filePath: str
     _fileContent: list[str]
 
@@ -89,6 +91,7 @@ class TSP:
         self._filePath = filePath
         self._fileContent = self._readTSPFile(filePath)
         self._parseAllMetadata(self._fileContent)
+        self._parseNodeCoords(self._fileContent, self.dimension)
 
     def _readTSPFile(self, filePath: str) -> list[str]:
         if not filePath.lower().endswith(".tsp"):
@@ -133,6 +136,26 @@ class TSP:
                     self.displayDataType = DISPLAY_DATA_TYPE[value]
                 case _:
                     pass
+
+    def _parseNodeCoords(self, fileContent: list[str], dimension: int):
+        self.nodeCoords = []
+
+        isParsing = False
+        i = 0
+        for line in fileContent:
+            if isParsing and i == dimension:
+                break
+
+            if not isParsing:
+                if "NODE_COORD_SECTION" in line:
+                    isParsing = True
+
+                continue
+
+            lineParts = line.strip().split(None, maxsplit=3)
+            self.nodeCoords.append((float(lineParts[1]), float(lineParts[2])))
+
+            i = i + 1
 
 
 if __name__ == "__main__":
