@@ -15,18 +15,31 @@ print(tsp.name + " was loaded")
 
 ## 2. Plot TSP Graph
 
+import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.animation import PillowWriter
 
 x_values = [i[0] for i in tsp.nodeCoords]
 y_values = [i[1] for i in tsp.nodeCoords]
 
-plt.plot(x_values, y_values, "r--", zorder=0)  # type: ignore
+figure1 = plt.figure()  # type: ignore
 plt.scatter(x_values, y_values)  # type: ignore
+plottedLines = plt.plot([], [], "r-", zorder=0)  # type: ignore
 
-for i in range(tsp.dimension):
-    plt.annotate(str(i + 1), (x_values[i], y_values[i]))  # type: ignore
+# for i in range(tsp.dimension):
+#     plt.annotate(str(i + 1), (x_values[i], y_values[i]))  # type: ignore
 
-plt.show()  # type: ignore
+plottedLines[0].set_data(x_values, y_values)
+
+# plt.show()  # type: ignore
+
+animationWriter = PillowWriter(fps=15)  # type: ignore
+
+with animationWriter.saving(figure1, "figure1.gif", 100):  # type: ignore
+    for i in np.linspace(0, 100):
+        plottedLines[0].set_linewidth(i / 10)
+
+        animationWriter.grab_frame()  # type: ignore
 
 
 ## 3. Experiment
