@@ -27,12 +27,12 @@ figure1, axis = plt.subplots()  # type: ignore
 axis.scatter(x_values, y_values)  # type: ignore
 plottedLines = axis.plot([], [], "r-", zorder=0)  # type: ignore
 
-plottedLines[0].set_data(x_values, y_values)
-t = np.linspace(0, 100, 100)
+plottedLines[0].set_data(x_values, y_values)  # type: ignore
+t = np.linspace(0, 100, 100)  # type: ignore
 
 
 def update_data(frame):  # type: ignore
-    plottedLines[0].set_linewidth(frame / 10)
+    plottedLines[0].set_linewidth(frame / 10)  # type: ignore
     return plottedLines[0]
 
 
