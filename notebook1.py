@@ -17,29 +17,28 @@ print(tsp.name + " was loaded")
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.animation import PillowWriter
+
+from matplotlib.animation import FuncAnimation
 
 x_values = [i[0] for i in tsp.nodeCoords]
 y_values = [i[1] for i in tsp.nodeCoords]
 
-figure1 = plt.figure()  # type: ignore
-plt.scatter(x_values, y_values)  # type: ignore
-plottedLines = plt.plot([], [], "r-", zorder=0)  # type: ignore
-
-# for i in range(tsp.dimension):
-#     plt.annotate(str(i + 1), (x_values[i], y_values[i]))  # type: ignore
+figure1, axis = plt.subplots()  # type: ignore
+axis.scatter(x_values, y_values)  # type: ignore
+plottedLines = axis.plot([], [], "r-", zorder=0)  # type: ignore
 
 plottedLines[0].set_data(x_values, y_values)
+t = np.linspace(0, 100, 100)
 
-# plt.show()  # type: ignore
 
-animationWriter = PillowWriter(fps=15)  # type: ignore
+def update_data(frame):  # type: ignore
+    plottedLines[0].set_linewidth(frame / 10)
+    return plottedLines[0]
 
-with animationWriter.saving(figure1, "figure1.gif", 100):  # type: ignore
-    for i in np.linspace(0, 100):
-        plottedLines[0].set_linewidth(i / 10)
 
-        animationWriter.grab_frame()  # type: ignore
+funcAnimation = FuncAnimation(fig=figure1, func=update_data, frames=len(t), interval=25)  # type: ignore
+
+plt.show()  # type: ignore
 
 
 ## 3. Experiment
