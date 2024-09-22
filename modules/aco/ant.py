@@ -37,6 +37,11 @@ class Ant:
         for u in unvisited_vertices:
             neighbouring_edge: Edge = self.edges[last_vertex][u]
 
+            if (
+                neighbouring_edge.cost == 0
+            ):  # a280.tsp contains nodes laid on top of each other; then select the unvisited node automatically
+                return u
+
             a: float = math.pow(neighbouring_edge.pheromone_level, self.alpha)
             b: float = math.pow(1 / neighbouring_edge.cost, self.beta)
 
