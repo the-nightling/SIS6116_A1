@@ -1,6 +1,6 @@
-from node import Node
-from ant import Ant, Edge
-from utilities import calculate_euclidian_distance
+from .node import Node
+from .ant import Ant, Edge
+from .utilities import calculate_euclidian_distance
 
 
 class AntColony:

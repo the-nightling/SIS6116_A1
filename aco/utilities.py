@@ -1,5 +1,5 @@
 import math
-from node import Node
+from .node import Node
 
 
 def calculate_euclidian_distance(a: Node, b: Node) -> float:

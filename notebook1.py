@@ -20,8 +20,8 @@ import matplotlib.pyplot as plt
 
 from matplotlib.animation import FuncAnimation
 
-x_values = [i[0] for i in tsp.nodeCoords]
-y_values = [i[1] for i in tsp.nodeCoords]
+x_values: list[float] = [i[0] for i in tsp.nodeCoords]
+y_values: list[float] = [i[1] for i in tsp.nodeCoords]
 
 figure1, axis = plt.subplots()  # type: ignore
 axis.scatter(x_values, y_values)  # type: ignore
@@ -41,18 +41,22 @@ funcAnimation = FuncAnimation(fig=figure1, func=update_data, frames=len(t), inte
 plt.show()  # type: ignore
 
 
-## 3. Experiment
+## 3. Experiment with computing total distance of initial tour
 import math
+from aco.node import Node
+from aco.utilities import calculate_euclidian_distance
 
 totalDistance = 0
 
 for i in range(1, tsp.dimension):
-    x1 = x_values[i - 1]
-    y1 = y_values[i - 1]
-    x2 = x_values[i]
-    y2 = y_values[i]
+    x1: float = x_values[i - 1]
+    y1: float = y_values[i - 1]
+    x2: float = x_values[i]
+    y2: float = y_values[i]
     distance: float = math.dist([x1, y1], [x2, y2])  # type: ignore
+    distance2: float = calculate_euclidian_distance(Node(x1, y1), Node(x2, y2))
+
     print(f"({x1}, {y1}), ({x2}, {y2}) -> {distance}")
-    totalDistance = totalDistance + float(distance)  # type: ignore
+    totalDistance += distance  # type: ignore
 
 print(totalDistance)
