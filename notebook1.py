@@ -1,7 +1,7 @@
 ## 1. Parse TSP file
 
 import os
-from modules.tsp_file_parser import TSP
+from modules.tsp_file_parser.tsp_file_parser import TSP
 
 # problemName = "ulysses16.tsp"
 problemName = "a280.tsp"
@@ -43,8 +43,8 @@ plt.show()  # type: ignore
 
 ## 3. Experiment with computing total distance of initial tour
 import math
-from aco.node import Node
-from aco.utilities import calculate_euclidian_distance
+from modules.aco.node import Node
+from modules.aco.utilities import calculate_euclidian_distance
 
 totalDistance = 0
 

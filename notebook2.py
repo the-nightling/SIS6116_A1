@@ -1,5 +1,5 @@
-from aco.node import Node
-from aco.ant_colony import AntColony
+from modules.aco.node import Node
+from modules.aco.ant_colony import AntColony
 import matplotlib.pyplot as plt
 
 NUMBER_OF_ANTS: int = 3
