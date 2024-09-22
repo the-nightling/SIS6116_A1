@@ -1,4 +1,4 @@
-## 1. Parse TSP file
+### 1. Parse TSP file
 
 import os
 from modules.tsp_file_parser.tsp_file_parser import TSP
@@ -13,7 +13,7 @@ tsp = TSP(tspFilePath)
 print(tsp.name + " was loaded")
 
 
-## 2. Plot TSP Graph
+### 2. Plot TSP Graph
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -41,7 +41,8 @@ funcAnimation = FuncAnimation(fig=figure1, func=update_data, frames=len(t), inte
 plt.show()  # type: ignore
 
 
-## 3. Experiment with computing total distance of initial tour
+### 3. Experiment with computing total distance of initial tour
+
 import math
 from modules.aco.node import Node
 from modules.aco.utilities import calculate_euclidian_distance

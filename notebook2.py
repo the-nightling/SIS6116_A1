@@ -1,6 +1,7 @@
+### 1. Initialise ACO (AS) parameters
+
 from modules.aco.node import Node
 from modules.aco.ant_colony import AntColony
-import matplotlib.pyplot as plt
 
 NUMBER_OF_ANTS: int = 3
 ALPHA: float = 1
@@ -28,11 +29,19 @@ ant_colony = AntColony(
     nodes,
 )
 
+
+### 2. Plot TSP graph
+
+import matplotlib.pyplot as plt
+
 x_values: list[float] = [n.x for n in nodes]
 y_values: list[float] = [n.y for n in nodes]
 
 plt.scatter(x_values, y_values)  # type: ignore
 plt.show()  # type: ignore
+
+
+### 3. Compute shortest path
 
 for i in range(MAXIMUM_NUMBER_OF_ITERATIONS):
     if i > MAXIMUM_NUMBER_OF_ITERATIONS:
