@@ -10,6 +10,7 @@ class AntColony:
         alpha: float,
         beta: float,
         rho: float,
+        q: float,
         initial_pheromone_level: float,
         maximum_number_of_iterations: int,
         nodes: list[Node],
@@ -18,6 +19,7 @@ class AntColony:
         self.alpha: float = alpha
         self.beta: float = beta
         self.rho: float = rho
+        self.q: float = q
         self.maximum_number_of_iterations: int = maximum_number_of_iterations
         self.nodes: list[Node] = nodes
         self.number_of_nodes: int = len(nodes)
@@ -60,7 +62,7 @@ class AntColony:
         for ant in self.ants:
             tour: list[int] = ant.compute_tour()
             tour_cost: float = ant.compute_tour_cost()
-            self.add_pheromone(tour, 1 / tour_cost)
+            self.add_pheromone(tour, self.q / tour_cost)
 
             if ant.tour_cost < self.best_tour_cost:
                 self.best_tour = ant.tour

@@ -4,7 +4,8 @@ import os
 from modules.tsp_file_parser.tsp_file_parser import TSP
 
 # problemName = "ulysses16.tsp"
-problemName = "a280.tsp"
+# problemName = "a280.tsp"
+problemName = "berlin52.tsp"
 currentFolderPath = os.path.abspath("")
 tspFilePath = os.path.join(currentFolderPath, f"data\\{problemName}")
 print("Loading .tsp file from path: " + tspFilePath)
@@ -31,35 +32,28 @@ plottedLines = axis.plot([], [], "r-", zorder=0)  # type: ignore
 from modules.aco.node import Node
 from modules.aco.ant_colony import AntColony
 
-NUMBER_OF_ANTS: int = 3
+NUMBER_OF_ANTS: int = 104
 ALPHA: float = 1
 BETA: float = 3
 RHO: float = 0.1
+Q: float = 1000
 INITIAL_PHEROMONE_LEVEL: float = 1
 MAXIMUM_NUMBER_OF_ITERATIONS: int = 1000
 
 nodes: list[Node] = [Node(n[0], n[1]) for n in tsp.nodeCoords]
 
 ant_colony = AntColony(
-    NUMBER_OF_ANTS,
-    ALPHA,
-    BETA,
-    RHO,
-    INITIAL_PHEROMONE_LEVEL,
-    MAXIMUM_NUMBER_OF_ITERATIONS,
-    nodes,
+    number_of_ants=NUMBER_OF_ANTS,
+    alpha=ALPHA,
+    beta=BETA,
+    rho=RHO,
+    q=Q,
+    initial_pheromone_level=INITIAL_PHEROMONE_LEVEL,
+    maximum_number_of_iterations=MAXIMUM_NUMBER_OF_ITERATIONS,
+    nodes=nodes,
 )
 
-### Compute shortest path
-
-# for i in range(MAXIMUM_NUMBER_OF_ITERATIONS):
-#     if i > MAXIMUM_NUMBER_OF_ITERATIONS:
-#         break
-
-#     ant_colony.iterate()
-#     print(ant_colony.best_tour_cost)
-
-# print(ant_colony.best_tour)
+### Compute Shortest Path (animated output)
 
 from matplotlib.animation import FuncAnimation
 
@@ -94,3 +88,34 @@ funcAnimation = FuncAnimation(fig=figure1, func=update_data, frames=MAXIMUM_NUMB
 plt.show()  # type: ignore
 
 print(f"Best cost found: {ant_colony.best_tour_cost}")
+
+
+### Compute Shortest Path (console output)
+
+# for i in range(MAXIMUM_NUMBER_OF_ITERATIONS):
+#     if i > MAXIMUM_NUMBER_OF_ITERATIONS:
+#         break
+
+#     ant_colony.iterate()
+#     print(f"Iteration {i + 1}\nTotal cost = {int(ant_colony.best_tour_cost)}")
+
+# print(ant_colony.best_tour)
+
+
+# a280.tsp
+# best so far is cost of 3050 with
+# NUMBER_OF_ANTS: int = 30
+# ALPHA: float = 1
+# BETA: float = 3
+# RHO: float = 0.1
+# INITIAL_PHEROMONE_LEVEL: float = 1
+# MAXIMUM_NUMBER_OF_ITERATIONS: int = 300
+
+# berlin52.tsp
+# best so far is cost of 7544 with
+# NUMBER_OF_ANTS: int = 104
+# ALPHA: float = 1
+# BETA: float = 3
+# RHO: float = 0.1
+# INITIAL_PHEROMONE_LEVEL: float = 1
+# MAXIMUM_NUMBER_OF_ITERATIONS: int = 1000

@@ -37,9 +37,8 @@ class Ant:
         for u in unvisited_vertices:
             neighbouring_edge: Edge = self.edges[last_vertex][u]
 
-            if (
-                neighbouring_edge.cost == 0
-            ):  # a280.tsp contains nodes laid on top of each other; then select the unvisited node automatically
+            # a280.tsp contains nodes laid on top of each other; then select the unvisited node automatically
+            if neighbouring_edge.cost == 0:
                 return u
 
             a: float = math.pow(neighbouring_edge.pheromone_level, self.alpha)
@@ -49,6 +48,10 @@ class Ant:
 
         random_value: float = random.uniform(0, 1)
         roulette_wheel_position: float = 0.0
+
+        # if pheromone dried up on all unvisited edges, pick random next node
+        if denominator == 0:
+            return random.choice(unvisited_vertices)
 
         for j in unvisited_vertices:
             neighbouring_edge: Edge = self.edges[last_vertex][j]
