@@ -54,7 +54,7 @@ ant_colony = AntColony(
 )
 
 ### Compute Shortest Path (animated output)
-
+import time
 from matplotlib.animation import FuncAnimation
 
 plottedLines[0].set_data(x_values, y_values)  # type: ignore
@@ -70,6 +70,7 @@ def create_tour_coords(tour: list[int]) -> list[tuple[float, float]]:
 
 def update_data(frame):  # type: ignore
     ant_colony.iterate()
+    ellapsed_time: float = time.time() - start_time
 
     tour_coords: list[tuple[float, float]] = create_tour_coords(ant_colony.best_tour)
     x_tour_coords: list[float] = [c[0] for c in tour_coords]
@@ -77,29 +78,38 @@ def update_data(frame):  # type: ignore
 
     plottedLines[0].set_data(x_tour_coords, y_tour_coords)
     axis.set_title(
-        f"Iteration {frame + 1}\nTotal cost = {int(ant_colony.best_tour_cost)}"
+        f"Iteration {frame + 1}\nTotal cost = {int(ant_colony.best_tour_cost)}\nTime ellapsed = {ellapsed_time:.1f}s"
     )
 
     return plottedLines[0]
 
 
-funcAnimation = FuncAnimation(fig=figure1, func=update_data, frames=MAXIMUM_NUMBER_OF_ITERATIONS, interval=25, repeat=False)  # type: ignore
+funcAnimation = FuncAnimation(fig=figure1, func=update_data, frames=MAXIMUM_NUMBER_OF_ITERATIONS, interval=10, repeat=False)  # type: ignore
 
+start_time: float = time.time()
 plt.show()  # type: ignore
 
+print(f"Best tour found: {ant_colony.best_tour}")
 print(f"Best cost found: {ant_colony.best_tour_cost}")
 
 
 ### Compute Shortest Path (console output)
+# import time
 
+# start_time: float = time.time()
 # for i in range(MAXIMUM_NUMBER_OF_ITERATIONS):
 #     if i > MAXIMUM_NUMBER_OF_ITERATIONS:
 #         break
 
 #     ant_colony.iterate()
-#     print(f"Iteration {i + 1}\nTotal cost = {int(ant_colony.best_tour_cost)}")
+#     ellapsed_time: float = time.time() - start_time
 
-# print(ant_colony.best_tour)
+#     print(
+#         f"Iteration {i + 1}; Total cost = {int(ant_colony.best_tour_cost)}; Time ellapsed = {ellapsed_time:.1f}s"
+#     )
+
+# print(f"Best tour found: {ant_colony.best_tour}")
+# print(f"Best cost found: {ant_colony.best_tour_cost}")
 
 
 # a280.tsp
@@ -119,3 +129,13 @@ print(f"Best cost found: {ant_colony.best_tour_cost}")
 # RHO: float = 0.1
 # INITIAL_PHEROMONE_LEVEL: float = 1
 # MAXIMUM_NUMBER_OF_ITERATIONS: int = 1000
+
+# TODO
+# * log time taken
+# - log results to file
+# - log last best iteration
+# - fix last path of tour not plotted in animation
+# - improve algorithm to use ACS instead of AS
+# - add stopping criteria other that number of iterations
+# - plot known optimal path if available
+# - stretch goal: plot animated pheromone trails
