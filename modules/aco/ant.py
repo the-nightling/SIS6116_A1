@@ -51,6 +51,7 @@ class Ant:
 
         # if pheromone dried up on all unvisited edges, pick random next node
         if denominator == 0:
+            print("edge dried up")
             return random.choice(unvisited_vertices)
 
         for j in unvisited_vertices:
@@ -65,10 +66,8 @@ class Ant:
 
         raise RuntimeError("Could not select next node for ant.")
 
-    def compute_tour(self) -> list[int]:
-        self.tour = [
-            random.randint(0, self.number_of_vertices - 1)
-        ]  # initialise tour with starting node
+    def compute_tour(self, start_vertex: int) -> list[int]:
+        self.tour = [start_vertex]  # initialise tour with starting node
 
         while len(self.tour) < self.number_of_vertices:
             self.tour.append(self.select_next_vertex())

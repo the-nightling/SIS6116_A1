@@ -27,17 +27,18 @@ axis.scatter(x_values, y_values)  # type: ignore
 plottedLines = axis.plot([], [], "r-", zorder=0)  # type: ignore
 
 
-### Initialise ACO (AS) parameters
+### Initialise ACO parameters
 
 from modules.aco.node import Node
 from modules.aco.ant_colony import AntColony
 
-NUMBER_OF_ANTS: int = 104
+ALGORITHM: str = "AS"
+NUMBER_OF_ANTS: int = 52
 ALPHA: float = 1
 BETA: float = 3
 RHO: float = 0.1
-Q: float = 1000
-INITIAL_PHEROMONE_LEVEL: float = 1
+Q: float = 100
+INITIAL_PHEROMONE_LEVEL: float = 10
 MAXIMUM_NUMBER_OF_ITERATIONS: int = 1000
 
 nodes: list[Node] = [Node(n[0], n[1]) for n in tsp.nodeCoords]
@@ -51,8 +52,9 @@ def log_results(
     ellapsed_time: float,
     ant_colony: AntColony,
 ) -> None:
-    with open("results.txt", "a") as file:
-        file.write(f"DATE_TIME:{date_time}")
+    with open(f"results_{ALGORITHM}.txt", "a") as file:
+        file.write(f"DATE_TIME:{date_time}\n")
+        file.write(f"ALGORITHM:{ALGORITHM}\n")
         file.write(f"PROBLEM: {problem_name}\n")
         file.write(f"RUN_NUMBER: {run_number}\n")
         file.write(f"BEST_COST_FOUND: {ant_colony.best_tour_cost}\n")
@@ -72,7 +74,7 @@ def log_results(
 import time
 import datetime
 
-number_of_runs: int = 2
+number_of_runs: int = 10
 
 for r in range(number_of_runs):
     ant_colony = AntColony(

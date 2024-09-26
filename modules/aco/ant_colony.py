@@ -1,3 +1,4 @@
+import random
 from .node import Node
 from .ant import Ant, Edge
 from .utilities import calculate_euclidian_distance
@@ -59,8 +60,18 @@ class AntColony:
     def iterate(self):
         self.evaporate_pheromone()
 
+        starting_vertices: list[int] = list(range(self.number_of_nodes))
+
         for ant in self.ants:
-            tour: list[int] = ant.compute_tour()
+            if (
+                not starting_vertices
+            ):  # if we have more ants than nodes, place ant on already occupied nodes
+                starting_vertices = list(range(self.number_of_nodes))
+
+            start_vertex: int = random.choice(starting_vertices)
+            starting_vertices.remove(start_vertex)
+
+            tour: list[int] = ant.compute_tour(start_vertex)
             tour_cost: float = ant.compute_tour_cost()
             self.add_pheromone(tour, self.q / tour_cost)
 
