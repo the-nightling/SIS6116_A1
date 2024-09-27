@@ -21,6 +21,7 @@ class AntColony:
         self.beta: float = beta
         self.rho: float = rho
         self.q: float = q
+        self.initial_pheromone_level: float = initial_pheromone_level
         self.maximum_number_of_iterations: int = maximum_number_of_iterations
         self.nodes: list[Node] = nodes
         self.number_of_nodes: int = len(nodes)
@@ -46,7 +47,19 @@ class AntColony:
         self.best_tour: list[int] = []
         self.best_tour_cost: float = float("inf")
 
-    def add_pheromone(self, tour: list[int], heuristic: float):
+    def add_pheromone_AS(self, tour: list[int], heuristic: float):
+        for i in range(self.number_of_nodes):
+            self.edges[tour[i]][
+                tour[(i + 1) % self.number_of_nodes]
+            ].pheromone_level += heuristic
+
+    def add_pheromone_local_ACS(self, tour: list[int], heuristic: float):
+        for i in range(self.number_of_nodes):
+            self.edges[tour[i]][
+                tour[(i + 1) % self.number_of_nodes]
+            ].pheromone_level += heuristic
+
+    def add_pheromone_global_ACS(self, tour: list[int], heuristic: float):
         for i in range(self.number_of_nodes):
             self.edges[tour[i]][
                 tour[(i + 1) % self.number_of_nodes]
@@ -58,8 +71,6 @@ class AntColony:
                 self.edges[i][j].pheromone_level *= 1 - self.rho
 
     def iterate_AS(self):
-        self.evaporate_pheromone()
-
         starting_vertices: list[int] = list(range(self.number_of_nodes))
 
         for ant in self.ants:
@@ -74,17 +85,16 @@ class AntColony:
             ant.compute_tour_AS(start_vertex)
             ant.compute_tour_cost()
 
+        self.evaporate_pheromone()
+
         for ant in self.ants:
-            self.add_pheromone(ant.tour, self.q / ant.tour_cost)
+            self.add_pheromone_AS(ant.tour, self.q / ant.tour_cost)
 
             if ant.tour_cost < self.best_tour_cost:
                 self.best_tour = ant.tour
                 self.best_tour_cost = ant.tour_cost
 
-    # TODO
     def iterate_ACS(self, q_0: float):
-        self.evaporate_pheromone()
-
         starting_vertices: list[int] = list(range(self.number_of_nodes))
 
         for ant in self.ants:
@@ -99,9 +109,18 @@ class AntColony:
             ant.compute_tour_ACS(start_vertex, q_0)
             ant.compute_tour_cost()
 
-        for ant in self.ants:
-            self.add_pheromone(ant.tour, self.q / ant.tour_cost)
+            self.evaporate_pheromone()
+
+            self.add_pheromone_local_ACS(
+                ant.tour, self.rho * self.initial_pheromone_level
+            )
 
             if ant.tour_cost < self.best_tour_cost:
                 self.best_tour = ant.tour
                 self.best_tour_cost = ant.tour_cost
+
+        self.evaporate_pheromone()
+
+        self.add_pheromone_global_ACS(
+            self.best_tour, self.rho * (self.q / self.best_tour_cost)
+        )

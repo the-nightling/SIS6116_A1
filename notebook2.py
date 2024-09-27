@@ -58,158 +58,158 @@ def log_results(
 
 
 ### Compute Shortest Path (non-animated version)
-import time
-import datetime
+# import time
+# import datetime
 
-number_of_runs: int = 3
+# number_of_runs: int = 3
 
-for r in range(number_of_runs):
-    ant_colony = AntColony(
-        number_of_ants=NUMBER_OF_ANTS,
-        alpha=ALPHA,
-        beta=BETA,
-        rho=RHO,
-        q=Q,
-        initial_pheromone_level=INITIAL_PHEROMONE_LEVEL,
-        maximum_number_of_iterations=MAXIMUM_NUMBER_OF_ITERATIONS,
-        nodes=nodes,
-    )
+# for r in range(number_of_runs):
+#     ant_colony = AntColony(
+#         number_of_ants=NUMBER_OF_ANTS,
+#         alpha=ALPHA,
+#         beta=BETA,
+#         rho=RHO,
+#         q=Q,
+#         initial_pheromone_level=INITIAL_PHEROMONE_LEVEL,
+#         maximum_number_of_iterations=MAXIMUM_NUMBER_OF_ITERATIONS,
+#         nodes=nodes,
+#     )
 
-    start_time: float = time.time()
-    ellapsed_time: float = 0
+#     start_time: float = time.time()
+#     ellapsed_time: float = 0
 
-    for i in range(MAXIMUM_NUMBER_OF_ITERATIONS):
-        ant_colony.iterate_AS()
-        ellapsed_time: float = time.time() - start_time
+#     for i in range(MAXIMUM_NUMBER_OF_ITERATIONS):
+#         ant_colony.iterate_AS()
+#         ellapsed_time: float = time.time() - start_time
 
-        print(
-            f"Iteration {i + 1}; Total cost = {int(ant_colony.best_tour_cost)}; Time ellapsed = {ellapsed_time:.1f}s"
-        )
+#         print(
+#             f"Iteration {i + 1}; Total cost = {int(ant_colony.best_tour_cost)}; Time ellapsed = {ellapsed_time:.1f}s"
+#         )
 
-    print(f"Best tour found: {ant_colony.best_tour}")
-    print(f"Best cost found: {ant_colony.best_tour_cost}")
+#     print(f"Best tour found: {ant_colony.best_tour}")
+#     print(f"Best cost found: {ant_colony.best_tour_cost}")
 
-    # for i in range(len(nodes)):
-    #     for j in range(len(nodes)):
-    #         print(f"{int(ant_colony.edges[i][j].pheromone_level)} ", end="")
-    #     print()
+#     # for i in range(len(nodes)):
+#     #     for j in range(len(nodes)):
+#     #         print(f"{int(ant_colony.edges[i][j].pheromone_level)} ", end="")
+#     #     print()
 
-    log_results(
-        date_time=str(datetime.datetime.now()),
-        run_number=r,
-        problem_name=problem_name,
-        ellapsed_time=ellapsed_time,
-        ant_colony=ant_colony,
-    )
+#     log_results(
+#         date_time=str(datetime.datetime.now()),
+#         run_number=r,
+#         problem_name=problem_name,
+#         ellapsed_time=ellapsed_time,
+#         ant_colony=ant_colony,
+#     )
 
 
 ### Compute Shortest Path (animated output)
-# import matplotlib.pyplot as plt
-# import networkx as nx
-# import time
-# from matplotlib.animation import FuncAnimation
+import matplotlib.pyplot as plt
+import networkx as nx
+import time
+from matplotlib.animation import FuncAnimation
 
-# x_values: list[float] = [i[0] for i in tsp.nodeCoords]
-# y_values: list[float] = [i[1] for i in tsp.nodeCoords]
+x_values: list[float] = [i[0] for i in tsp.nodeCoords]
+y_values: list[float] = [i[1] for i in tsp.nodeCoords]
 
-# # Plot TSP Graph
-# G = nx.complete_graph(len(nodes))  # type: ignore
-# node_positions: dict[int, tuple[float, float]] = {
-#     i: (x_values[i], y_values[i]) for i in range(len(nodes))
-# }
+# Plot TSP Graph
+G = nx.complete_graph(len(nodes))  # type: ignore
+node_positions: dict[int, tuple[float, float]] = {
+    i: (x_values[i], y_values[i]) for i in range(len(nodes))
+}
 
-# figure1, axis = plt.subplots()  # type: ignore
-# nx.draw_networkx_nodes(G, node_positions, ax=axis, node_size=10)  # type: ignore
+figure1, axis = plt.subplots()  # type: ignore
+nx.draw_networkx_nodes(G, node_positions, ax=axis, node_size=10)  # type: ignore
 
-# # Initialize best tour plot for an iteration
-# tour_line = axis.plot([], [], "r-", zorder=1)[0]
+# Initialize best tour plot for an iteration
+tour_line = axis.plot([], [], "r-", zorder=1)[0]
 
-# # Initialize edge plots and store them in a dictionary where the key is the node indices like (node_i, node_j)
-# edges = list(G.edges())  # type: ignore
-# edge_lines_dict = {  # type: ignore
-#     (edge[0], edge[1]): axis.plot(
-#         [node_positions[edge[0]][0], node_positions[edge[1]][0]],
-#         [node_positions[edge[0]][1], node_positions[edge[1]][1]],
-#         color="gray",
-#         alpha=0,
-#         zorder=0,
-#     )[0]
-#     for edge in edges  # type: ignore
-# }
-
-
-# # Creates tour coordinates for a particular tour so that it can be plotted
-# def create_tour_coords(tour: list[int]) -> list[tuple[float, float]]:
-#     coords: list[tuple[float, float]] = []
-#     for n in tour:
-#         coords.append((x_values[n], y_values[n]))
-#     coords.append(coords[0])
-
-#     return coords
+# Initialize edge plots and store them in a dictionary where the key is the node indices like (node_i, node_j)
+edges = list(G.edges())  # type: ignore
+edge_lines_dict = {  # type: ignore
+    (edge[0], edge[1]): axis.plot(
+        [node_positions[edge[0]][0], node_positions[edge[1]][0]],
+        [node_positions[edge[0]][1], node_positions[edge[1]][1]],
+        color="gray",
+        alpha=0,
+        zorder=0,
+    )[0]
+    for edge in edges  # type: ignore
+}
 
 
-# EDGE_TRANSPARENCY_SCALING_FACTOR: int = 30
+# Creates tour coordinates for a particular tour so that it can be plotted
+def create_tour_coords(tour: list[int]) -> list[tuple[float, float]]:
+    coords: list[tuple[float, float]] = []
+    for n in tour:
+        coords.append((x_values[n], y_values[n]))
+    coords.append(coords[0])
+
+    return coords
 
 
-# # One iteration of the animation
-# def update_data(frame):  # type: ignore
-#     ant_colony.iterate()
-
-#     ellapsed_time: float = time.time() - start_time
-
-#     # update transparency of an edge based on the pheromone level
-#     for i in range(len(nodes)):
-#         for j in range(len(nodes)):
-#             if i == j:
-#                 continue
-
-#             edge_pheromone_level: float = ant_colony.edges[i][j].pheromone_level
-#             edge_alpha: float = edge_pheromone_level / EDGE_TRANSPARENCY_SCALING_FACTOR
-#             if edge_alpha > 1:
-#                 edge_alpha = 1
-
-#             edge_nodes: tuple[int, int] = (
-#                 (i, j) if (i, j) in edge_lines_dict else (j, i)
-#             )
-#             edge_lines_dict[edge_nodes].set_alpha(edge_alpha)
-
-#     # update plot of best tour found so far
-#     tour_coords: list[tuple[float, float]] = create_tour_coords(ant_colony.best_tour)
-#     x_tour_coords: list[float] = [c[0] for c in tour_coords]
-#     y_tour_coords: list[float] = [c[1] for c in tour_coords]
-
-#     tour_line.set_data(x_tour_coords, y_tour_coords)
-#     axis.set_title(
-#         f"Iteration {frame + 1}\nTotal cost = {int(ant_colony.best_tour_cost)}\nTime ellapsed = {ellapsed_time:.1f}s"
-#     )
-
-#     return [tour_line, *edge_lines_dict.values()]
+EDGE_TRANSPARENCY_SCALING_FACTOR: int = 30
 
 
-# # Initialize algorithm with desired parameters
-# ant_colony = AntColony(
-#     number_of_ants=NUMBER_OF_ANTS,
-#     alpha=ALPHA,
-#     beta=BETA,
-#     rho=RHO,
-#     q=Q,
-#     initial_pheromone_level=INITIAL_PHEROMONE_LEVEL,
-#     maximum_number_of_iterations=MAXIMUM_NUMBER_OF_ITERATIONS,
-#     nodes=nodes,
-# )
+# One iteration of the animation
+def update_data(frame):  # type: ignore
+    ant_colony.iterate_AS()
 
-# # Create the animation
-# ani = FuncAnimation(
-#     figure1,
-#     update_data,  # type: ignore
-#     frames=MAXIMUM_NUMBER_OF_ITERATIONS,
-#     interval=100,
-#     blit=False,
-#     repeat=False,
-# )
+    ellapsed_time: float = time.time() - start_time
 
-# start_time: float = time.time()
-# plt.show()  # type: ignore
+    # update transparency of an edge based on the pheromone level
+    for i in range(len(nodes)):
+        for j in range(len(nodes)):
+            if i == j:
+                continue
+
+            edge_pheromone_level: float = ant_colony.edges[i][j].pheromone_level
+            edge_alpha: float = edge_pheromone_level / EDGE_TRANSPARENCY_SCALING_FACTOR
+            if edge_alpha > 1:
+                edge_alpha = 1
+
+            edge_nodes: tuple[int, int] = (
+                (i, j) if (i, j) in edge_lines_dict else (j, i)
+            )
+            edge_lines_dict[edge_nodes].set_alpha(edge_alpha)
+
+    # update plot of best tour found so far
+    tour_coords: list[tuple[float, float]] = create_tour_coords(ant_colony.best_tour)
+    x_tour_coords: list[float] = [c[0] for c in tour_coords]
+    y_tour_coords: list[float] = [c[1] for c in tour_coords]
+
+    tour_line.set_data(x_tour_coords, y_tour_coords)
+    axis.set_title(
+        f"Iteration {frame + 1}\nTotal cost = {int(ant_colony.best_tour_cost)}\nTime ellapsed = {ellapsed_time:.1f}s"
+    )
+
+    return [tour_line, *edge_lines_dict.values()]
+
+
+# Initialize algorithm with desired parameters
+ant_colony = AntColony(
+    number_of_ants=NUMBER_OF_ANTS,
+    alpha=ALPHA,
+    beta=BETA,
+    rho=RHO,
+    q=Q,
+    initial_pheromone_level=INITIAL_PHEROMONE_LEVEL,
+    maximum_number_of_iterations=MAXIMUM_NUMBER_OF_ITERATIONS,
+    nodes=nodes,
+)
+
+# Create the animation
+ani = FuncAnimation(
+    figure1,
+    update_data,  # type: ignore
+    frames=MAXIMUM_NUMBER_OF_ITERATIONS,
+    interval=100,
+    blit=False,
+    repeat=False,
+)
+
+start_time: float = time.time()
+plt.show()  # type: ignore
 
 
 # a280.tsp
