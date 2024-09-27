@@ -51,7 +51,7 @@ class Ant:
 
         # if pheromone dried up on all unvisited edges, pick random next node
         if denominator == 0:
-            print("edge dried up")
+            print("All neighbouring edges dried up")
             return random.choice(unvisited_vertices)
 
         for j in unvisited_vertices:
