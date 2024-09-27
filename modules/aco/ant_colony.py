@@ -57,7 +57,7 @@ class AntColony:
             for j in range(self.number_of_nodes):
                 self.edges[i][j].pheromone_level *= 1 - self.rho
 
-    def iterate(self):
+    def iterate_AS(self):
         self.evaporate_pheromone()
 
         starting_vertices: list[int] = list(range(self.number_of_nodes))
@@ -71,9 +71,36 @@ class AntColony:
             start_vertex: int = random.choice(starting_vertices)
             starting_vertices.remove(start_vertex)
 
-            tour: list[int] = ant.compute_tour(start_vertex)
-            tour_cost: float = ant.compute_tour_cost()
-            self.add_pheromone(tour, self.q / tour_cost)
+            ant.compute_tour_AS(start_vertex)
+            ant.compute_tour_cost()
+
+        for ant in self.ants:
+            self.add_pheromone(ant.tour, self.q / ant.tour_cost)
+
+            if ant.tour_cost < self.best_tour_cost:
+                self.best_tour = ant.tour
+                self.best_tour_cost = ant.tour_cost
+
+    # TODO
+    def iterate_ACS(self, q_0: float):
+        self.evaporate_pheromone()
+
+        starting_vertices: list[int] = list(range(self.number_of_nodes))
+
+        for ant in self.ants:
+            if (
+                not starting_vertices
+            ):  # if we have more ants than nodes, place ant on already occupied nodes
+                starting_vertices = list(range(self.number_of_nodes))
+
+            start_vertex: int = random.choice(starting_vertices)
+            starting_vertices.remove(start_vertex)
+
+            ant.compute_tour_ACS(start_vertex, q_0)
+            ant.compute_tour_cost()
+
+        for ant in self.ants:
+            self.add_pheromone(ant.tour, self.q / ant.tour_cost)
 
             if ant.tour_cost < self.best_tour_cost:
                 self.best_tour = ant.tour

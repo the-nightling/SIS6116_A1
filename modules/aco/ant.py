@@ -25,7 +25,7 @@ class Ant:
         self.tour: list[int] = []
         self.tour_cost: float = 0.0
 
-    def select_next_vertex(self) -> int:
+    def select_next_vertex_AS(self) -> int:
         unvisited_vertices: list[int] = [
             vertex
             for vertex in range(self.number_of_vertices)
@@ -43,8 +43,8 @@ class Ant:
 
             a: float = math.pow(neighbouring_edge.pheromone_level, self.alpha)
             b: float = math.pow(1 / neighbouring_edge.cost, self.beta)
-
-            denominator += a * b
+            numerator: float = a * b
+            denominator += numerator
 
         random_value: float = random.uniform(0, 1)
         roulette_wheel_position: float = 0.0
@@ -66,11 +66,73 @@ class Ant:
 
         raise RuntimeError("Could not select next node for ant.")
 
-    def compute_tour(self, start_vertex: int) -> list[int]:
+    def select_next_vertex_ACS(self, q_0: float) -> int:
+        unvisited_vertices: list[int] = [
+            vertex
+            for vertex in range(self.number_of_vertices)
+            if vertex not in self.tour
+        ]
+        last_vertex: int = self.tour[-1]
+
+        max_numerator = 0
+        max_numerator_vertex: int = unvisited_vertices[0]
+        denominator = 0
+        for u in unvisited_vertices:
+            neighbouring_edge: Edge = self.edges[last_vertex][u]
+
+            # a280.tsp contains nodes laid on top of each other; then select the unvisited node automatically
+            if neighbouring_edge.cost == 0:
+                return u
+
+            a: float = math.pow(neighbouring_edge.pheromone_level, self.alpha)
+            b: float = math.pow(1 / neighbouring_edge.cost, self.beta)
+            numerator: float = a * b
+
+            if numerator > max_numerator:
+                max_numerator: float = numerator
+                max_numerator_vertex = u
+
+            denominator += numerator
+
+        random_q: float = random.uniform(0, 1)
+        if random_q <= q_0:
+            return max_numerator_vertex
+
+        random_value: float = random.uniform(0, 1)
+        roulette_wheel_position: float = 0.0
+
+        # if pheromone dried up on all unvisited edges, pick random next node
+        if denominator == 0:
+            print("All neighbouring edges dried up")
+            return random.choice(unvisited_vertices)
+
+        for j in unvisited_vertices:
+            neighbouring_edge: Edge = self.edges[last_vertex][j]
+
+            a: float = math.pow(neighbouring_edge.pheromone_level, self.alpha)
+            b: float = math.pow(1 / neighbouring_edge.cost, self.beta)
+
+            roulette_wheel_position += (a * b) / denominator
+            if roulette_wheel_position >= random_value:
+                return j
+
+        raise RuntimeError("Could not select next node for ant.")
+
+    def compute_tour_AS(self, start_vertex: int) -> list[int]:
         self.tour = [start_vertex]  # initialise tour with starting node
 
         while len(self.tour) < self.number_of_vertices:
-            self.tour.append(self.select_next_vertex())
+            self.tour.append(self.select_next_vertex_AS())
+
+        return self.tour
+
+    def compute_tour_ACS(self, start_vertex: int, q_0: float) -> list[int]:
+        self.tour = [start_vertex]  # initialise tour with starting node
+
+        while len(self.tour) < self.number_of_vertices:
+            self.tour.append(
+                self.select_next_vertex_ACS(q_0),
+            )
 
         return self.tour
 
