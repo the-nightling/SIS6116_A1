@@ -17,6 +17,7 @@ class Ant:
         alpha: float,
         beta: float,
         number_of_vertices: int,
+        dry_neighbouring_edges_counter: list[int],
     ) -> None:
         self.edges: list[list[Edge]] = edges
         self.alpha: float = alpha
@@ -24,6 +25,7 @@ class Ant:
         self.number_of_vertices: int = number_of_vertices
         self.tour: list[int] = []
         self.tour_cost: float = 0.0
+        self.dry_neighbouring_edges_counter: list[int] = dry_neighbouring_edges_counter
 
     def select_next_vertex_AS(self) -> int:
         unvisited_vertices: list[int] = [
@@ -51,7 +53,7 @@ class Ant:
 
         # if pheromone dried up on all unvisited edges, pick random next node
         if denominator == 0:
-            print("All neighbouring edges dried up")
+            self.dry_neighbouring_edges_counter[0] += 1
             return random.choice(unvisited_vertices)
 
         for j in unvisited_vertices:
@@ -103,7 +105,7 @@ class Ant:
 
         # if pheromone dried up on all unvisited edges, pick random next node
         if denominator == 0:
-            print("All neighbouring edges dried up")
+            self.dry_neighbouring_edges_counter[0] += 1
             return random.choice(unvisited_vertices)
 
         for j in unvisited_vertices:

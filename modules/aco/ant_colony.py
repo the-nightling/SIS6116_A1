@@ -39,8 +39,16 @@ class AntColony:
                     i, j, edge_cost, initial_pheromone_level
                 )
 
+        self.dry_neighbouring_edges_counter: list[int] = [0]
+
         self.ants: list[Ant] = [
-            Ant(self.edges, alpha, beta, self.number_of_nodes)
+            Ant(
+                self.edges,
+                alpha,
+                beta,
+                self.number_of_nodes,
+                self.dry_neighbouring_edges_counter,
+            )
             for _ in range(self.number_of_ants)
         ]
 
