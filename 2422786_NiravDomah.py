@@ -95,87 +95,87 @@ def log_run_results(
 
 
 ### Compute Shortest Path (non-animated version)
-# import time
-# import datetime
-# import numpy as np
+import time
+import datetime
+import numpy as np
 
-# number_of_runs: int = 10
-# run_costs: list[float] = []
-# ellapsed_times: list[float] = []
-# dry_neighbouring_edges_counters: list[int] = []
+number_of_runs: int = 10
+run_costs: list[float] = []
+ellapsed_times: list[float] = []
+dry_neighbouring_edges_counters: list[int] = []
 
-# for r in range(number_of_runs):
-#     ant_colony = AntColony(
-#         number_of_ants=NUMBER_OF_ANTS,
-#         alpha=ALPHA,
-#         beta=BETA,
-#         rho=RHO,
-#         q=Q,
-#         initial_pheromone_level=INITIAL_PHEROMONE_LEVEL,
-#         maximum_number_of_iterations=MAXIMUM_NUMBER_OF_ITERATIONS,
-#         nodes=nodes,
-#     )
+for r in range(number_of_runs):
+    ant_colony = AntColony(
+        number_of_ants=NUMBER_OF_ANTS,
+        alpha=ALPHA,
+        beta=BETA,
+        rho=RHO,
+        q=Q,
+        initial_pheromone_level=INITIAL_PHEROMONE_LEVEL,
+        maximum_number_of_iterations=MAXIMUM_NUMBER_OF_ITERATIONS,
+        nodes=nodes,
+    )
 
-#     start_time: float = time.time()
-#     ellapsed_time: float = 0
+    start_time: float = time.time()
+    ellapsed_time: float = 0
 
-#     for i in range(MAXIMUM_NUMBER_OF_ITERATIONS):
-#         if ALGORITHM == "AS":  # type: ignore
-#             ant_colony.iterate_AS()
-#         elif ALGORITHM == "ACS":
-#             ant_colony.iterate_ACS(Q_0)
+    for i in range(MAXIMUM_NUMBER_OF_ITERATIONS):
+        if ALGORITHM == "AS":  # type: ignore
+            ant_colony.iterate_AS()
+        elif ALGORITHM == "ACS":
+            ant_colony.iterate_ACS(Q_0)
 
-#         ellapsed_time: float = time.time() - start_time
+        ellapsed_time: float = time.time() - start_time
 
-#         print(
-#             f"Iteration {i + 1}; Total cost = {int(ant_colony.best_tour_cost)}; Time ellapsed = {ellapsed_time:.1f}s; Dry neighbouring edges counter = {ant_colony.dry_neighbouring_edges_counter[0]}"
-#         )
+        print(
+            f"Iteration {i + 1}; Total cost = {int(ant_colony.best_tour_cost)}; Time ellapsed = {ellapsed_time:.1f}s; Dry neighbouring edges counter = {ant_colony.dry_neighbouring_edges_counter[0]}"
+        )
 
-#     print(f"Best tour found: {ant_colony.best_tour}")
-#     print(f"Best cost found: {ant_colony.best_tour_cost}")
+    print(f"Best tour found: {ant_colony.best_tour}")
+    print(f"Best cost found: {ant_colony.best_tour_cost}")
 
-#     run_costs.append(ant_colony.best_tour_cost)
-#     ellapsed_times.append(ellapsed_time)
-#     dry_neighbouring_edges_counters.append(ant_colony.dry_neighbouring_edges_counter[0])
+    run_costs.append(ant_colony.best_tour_cost)
+    ellapsed_times.append(ellapsed_time)
+    dry_neighbouring_edges_counters.append(ant_colony.dry_neighbouring_edges_counter[0])
 
-#     max_pheromone_level = float("-inf")
-#     min_pheromone_level = float("inf")
-#     for i in range(len(nodes)):
-#         for j in range(len(nodes)):
-#             pheromone_level: float = ant_colony.edges[i][j].pheromone_level
-#             if max_pheromone_level < pheromone_level:
-#                 max_pheromone_level: float = pheromone_level
+    max_pheromone_level = float("-inf")
+    min_pheromone_level = float("inf")
+    for i in range(len(nodes)):
+        for j in range(len(nodes)):
+            pheromone_level: float = ant_colony.edges[i][j].pheromone_level
+            if max_pheromone_level < pheromone_level:
+                max_pheromone_level: float = pheromone_level
 
-#             if min_pheromone_level > pheromone_level:
-#                 min_pheromone_level: float = pheromone_level
+            if min_pheromone_level > pheromone_level:
+                min_pheromone_level: float = pheromone_level
 
-#     print(f"Max pheromone level reached: {max_pheromone_level:.2f}")
-#     print(f"Min pheromone level reached: {min_pheromone_level:.2f}")
+    print(f"Max pheromone level reached: {max_pheromone_level:.2f}")
+    print(f"Min pheromone level reached: {min_pheromone_level:.2f}")
 
-#     if LOG_RESULTS:
-#         log_results(
-#             date_time=str(datetime.datetime.now()),
-#             run_number=r,
-#             problem_name=problem_name,
-#             ellapsed_time=ellapsed_time,
-#             ant_colony=ant_colony,
-#             max_pheromone_level_reached=max_pheromone_level,
-#             min_pheromone_level_reached=min_pheromone_level,
-#         )
+    if LOG_RESULTS:
+        log_results(
+            date_time=str(datetime.datetime.now()),
+            run_number=r,
+            problem_name=problem_name,
+            ellapsed_time=ellapsed_time,
+            ant_colony=ant_colony,
+            max_pheromone_level_reached=max_pheromone_level,
+            min_pheromone_level_reached=min_pheromone_level,
+        )
 
-# run_costs_avg = float(np.mean(run_costs))
-# run_costs_std_dev = float(np.std(run_costs))
-# ellapsed_time_avg = float(np.mean(ellapsed_times))
-# dry_neighbouring_edges_counter_avg = int(np.mean(dry_neighbouring_edges_counters))
+run_costs_avg = float(np.mean(run_costs))
+run_costs_std_dev = float(np.std(run_costs))
+ellapsed_time_avg = float(np.mean(ellapsed_times))
+dry_neighbouring_edges_counter_avg = int(np.mean(dry_neighbouring_edges_counters))
 
-# log_run_results(
-#     date_time=str(datetime.datetime.now()),
-#     problem_name=problem_name,
-#     ellapsed_time=ellapsed_time_avg,
-#     cost_avg=run_costs_avg,
-#     cost_std=run_costs_std_dev,
-#     dry_neighbouring_edges_counter=dry_neighbouring_edges_counter_avg,
-# )
+log_run_results(
+    date_time=str(datetime.datetime.now()),
+    problem_name=problem_name,
+    ellapsed_time=ellapsed_time_avg,
+    cost_avg=run_costs_avg,
+    cost_std=run_costs_std_dev,
+    dry_neighbouring_edges_counter=dry_neighbouring_edges_counter_avg,
+)
 
 
 ## Compute Shortest Path (animated output)
