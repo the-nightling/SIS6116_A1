@@ -25,7 +25,7 @@ ALPHA: float = 1
 BETA: float = 5
 RHO: float = 0.1
 Q: float = 1000
-Q_0: float = 0.1
+Q_0: float = 0.1  # aka r_0
 INITIAL_PHEROMONE_LEVEL: float = 10
 MAXIMUM_NUMBER_OF_ITERATIONS: int = 1000
 LOG_RESULTS: bool = True
@@ -105,6 +105,7 @@ ellapsed_times: list[float] = []
 dry_neighbouring_edges_counters: list[int] = []
 
 for r in range(number_of_runs):
+    # Initialise algorithm with chosen parameters
     ant_colony = AntColony(
         number_of_ants=NUMBER_OF_ANTS,
         alpha=ALPHA,
@@ -119,6 +120,7 @@ for r in range(number_of_runs):
     start_time: float = time.time()
     ellapsed_time: float = 0
 
+    # Iterate through algorithm
     for i in range(MAXIMUM_NUMBER_OF_ITERATIONS):
         if ALGORITHM == "AS":  # type: ignore
             ant_colony.iterate_AS()
@@ -131,6 +133,7 @@ for r in range(number_of_runs):
             f"Iteration {i + 1}; Total cost = {int(ant_colony.best_tour_cost)}; Time ellapsed = {ellapsed_time:.1f}s; Dry neighbouring edges counter = {ant_colony.dry_neighbouring_edges_counter[0]}"
         )
 
+    # Output results
     print(f"Best tour found: {ant_colony.best_tour}")
     print(f"Best cost found: {ant_colony.best_tour_cost}")
 
@@ -324,14 +327,3 @@ for i in range(len(nodes)):
 
 print(f"Max pheromone level reached: {max_pheromone_level:.2f}")
 print(f"Min pheromone level reached: {min_pheromone_level:.2f}")
-
-
-# TODO
-# * log time taken
-# * log results to file
-# - log last best iteration
-# * fix last path of tour not plotted in animation
-# * improve algorithm to use ACS instead of AS
-# - add stopping criteria other than number of iterations
-# - plot known optimal path if available
-# * stretch goal: plot animated pheromone trails
