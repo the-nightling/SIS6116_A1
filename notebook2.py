@@ -309,7 +309,7 @@ writer = animation.PillowWriter(fps=50, metadata=metadata)
 ani.save(f"results/{ALGORITHM}_{now}.gif", writer=writer)
 
 
-plt.show()  # type: ignore
+# plt.show()  # type: ignore
 
 max_pheromone_level = float("-inf")
 min_pheromone_level = float("inf")
